@@ -12,7 +12,7 @@ services:
     restart: always
   web:
     build: .
-    command: bash -c "python manage.py migrate && python extract_data.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/gym_manager_bot
     ports:
@@ -25,7 +25,7 @@ services:
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.datecron.schedule: "0 58 23 * * *"
-      ofelia.job-exec.datecron.command: "python manage.py dummy"
+      ofelia.job-exec.datecron.command: "python manage.py extract_data"
     depends_on:
       - db
 

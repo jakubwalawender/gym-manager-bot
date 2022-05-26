@@ -1,10 +1,11 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from enum import Enum
 
 import requests
 from django.core.management import BaseCommand
 from accounts.models import User
 from config.settings import RESERVATION_URL, REMOVE_RESERVATION_URL
+from django.utils import timezone
 from reservations.management.get_token import get_token
 
 
@@ -14,7 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for user in User.objects.all():
             token = get_token(user.gym_manager_login, user.gym_manager_password)
-            while datetime.now().hour != 0:
+            while timezone.localtime(timezone.now()).hour != 0:
                 pass
             self.make_reservations(user, token)
         print(f"Done!")
@@ -24,14 +25,14 @@ class Command(BaseCommand):
             "Authorization": f"Bearer {token}",
         }
         for reservation in user.reservations.all():
-            reservation_date = (datetime.now() + timedelta(days=7)).date().strftime("%Y-%m-%d")
+            reservation_date = (timezone.localtime(timezone.now()) + timedelta(days=7)).date().strftime("%Y-%m-%d")
             reservation_datetime = f"{reservation_date}T{reservation.hour}Z"
             data = {
                 "UserId": user.gym_manager_id,
                 "Date": reservation_datetime,
                 "ClassScheduleId": reservation.activity_id
             }
-            datetime.now() + timedelta(days=7)
+
             r = requests.post(RESERVATION_URL, json=data, headers=headers)
             if r.status_code == 200:
                 if r.json()["Status"] == ReservationStatus.RESERVE.value:

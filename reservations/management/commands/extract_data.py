@@ -15,22 +15,17 @@ class Command(BaseCommand):
     help = 'Hit classes endpoint and get all (id, day, hour) combinations for an activity which name equals provided string'
 
     def handle(self, *args, **options):
-        token = get_token(settings.USER_LOGIN, settings.USER_PASSWORD)
-        extracted = extract_ids(token)
+        extracted = extract_ids()
         print(f"Done!")
 
 
-def extract_ids(token):
+def extract_ids():
     CLASSES_BODY = {
         "Days": 7,
         "LocationId": 4,
-        "StartDate": datetime.today().strftime("%a, %d %b %Y 00:00:00 GMT"),
-        "UserId": settings.USER_ID
+        "StartDate": datetime.today().strftime("%a, %d %b %Y 00:00:00 GMT")
     }
-    CLASSES_HEADERS = {
-        "Authorization": f"Bearer {token}"
-    }
-    response = requests.post(settings.CLASSES_URL, json=CLASSES_BODY, headers=CLASSES_HEADERS)
+    response = requests.post(settings.CLASSES_URL, json=CLASSES_BODY)
     data = response.json()
     all_reservation_type_names = set([x["Name"] for x in data])
     for reservation_type_name in all_reservation_type_names:

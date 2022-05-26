@@ -22,6 +22,7 @@ services:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - FIELD_ENCRYPTION_KEY=1utBHXiKp-eZxmSR3lutCHYHDH3QB321yBnj0X6c0K0=
     restart: always
     labels:
       ofelia.enabled: "true"

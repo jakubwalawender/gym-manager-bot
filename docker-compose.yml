@@ -26,14 +26,16 @@ services:
     restart: always
     labels:
       ofelia.enabled: "true"
-      ofelia.job-exec.datecron.schedule: "0 58 23 * * *"
-      ofelia.job-exec.datecron.command: "python manage.py make_reservations"
+      ofelia.job-exec.datecron.schedule: "0 22 17 * * *"
+      ofelia.job-exec.datecron.command: "python manage.py test"
     depends_on:
       - db
 
   ofelia:
     image: mcuadros/ofelia:latest
     restart: always
+    environment:
+      - TZ=Europe/Warsaw
     depends_on:
       - web
     command: daemon --docker

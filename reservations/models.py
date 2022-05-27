@@ -36,7 +36,7 @@ class PossibleReservation(models.Model):
     type = models.ForeignKey("ReservationType", on_delete=models.CASCADE)
     activity_id = models.IntegerField()
     another_reservation_options = models.ManyToManyField("self", blank=True, symmetrical=False)
-    location = models.ForeignKey("Location", on_delete=models.CASCADE)
+    location = models.ForeignKey("Location", on_delete=models.CASCADE, null=True)
 
     class Meta:
         unique_together = ("hour", "weekday", "type", "activity_id")

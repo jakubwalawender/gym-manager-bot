@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.management import BaseCommand
 from django.db import IntegrityError
 
+from reservations.management.weekday_string_to_choice import weekday_string_to_choice
 from reservations.models import PossibleReservation, ReservationType, Location
 
 from reservations.management.get_token import get_token
@@ -48,15 +49,3 @@ def fetch_activities():
             except IntegrityError as e:
                 continue
 
-
-def weekday_string_to_choice(weekday):
-    days_dict = {
-        "Monday": PossibleReservation.Weekday.MONDAY,
-        "Tuesday": PossibleReservation.Weekday.TUESDAY,
-        "Wednesday": PossibleReservation.Weekday.WEDNESDAY,
-        "Thursday": PossibleReservation.Weekday.THURSDAY,
-        "Friday": PossibleReservation.Weekday.FRIDAY,
-        "Saturday": PossibleReservation.Weekday.SATURDAY,
-        "Sunday": PossibleReservation.Weekday.SUNDAY,
-    }
-    return days_dict[weekday]

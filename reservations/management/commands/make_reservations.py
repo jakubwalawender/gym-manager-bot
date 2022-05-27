@@ -7,6 +7,7 @@ from accounts.models import User
 from config.settings import RESERVATION_URL, REMOVE_RESERVATION_URL
 from django.utils import timezone
 from reservations.management.get_token import get_token
+from reservations.management.weekday_string_to_choice import weekday_string_to_choice
 
 
 class Command(BaseCommand):
@@ -15,16 +16,17 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for user in User.objects.all():
             token = get_token(user.gym_manager_login, user.gym_manager_password)
+            weekday = weekday_string_to_choice(timezone.localtime(timezone.now()).strftime('%A'))
             while timezone.localtime(timezone.now()).hour != 0:
                 pass
-            self.make_reservations(user, token)
+            self.make_reservations(user, token, weekday)
         print(f"Done!")
 
-    def make_reservations(self, user, token):
+    def make_reservations(self, user, token, weekday):
         headers = {
             "Authorization": f"Bearer {token}",
         }
-        for reservation in user.reservations.all():
+        for reservation in user.reservations.filter(weekday=weekday).order_by("-hour"):
             reservation_date = (timezone.localtime(timezone.now()) + timedelta(days=7)).date().strftime("%Y-%m-%d")
             reservation_datetime = f"{reservation_date}T{reservation.hour}Z"
             data = {

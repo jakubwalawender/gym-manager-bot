@@ -11,6 +11,16 @@ class ReservationType(models.Model):
         return self.name
 
 
+class Location(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    city = models.CharField(max_length=200)
+    address = models.CharField(max_length=200)
+    external_id = models.CharField(max_length=200, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class PossibleReservation(models.Model):
     class Weekday(models.TextChoices):
         MONDAY = "MO", _("Monday")
@@ -26,9 +36,10 @@ class PossibleReservation(models.Model):
     type = models.ForeignKey("ReservationType", on_delete=models.CASCADE)
     activity_id = models.IntegerField()
     another_reservation_options = models.ManyToManyField("self", blank=True, symmetrical=False)
+    location = models.ForeignKey("Location", on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ("hour", "weekday", "type", "activity_id")
 
     def __str__(self):
-        return f"{self.type.name} - {self.get_weekday_display()} - {self.hour}"
+        return f"{self.location.name} - {self.type.name} - {self.get_weekday_display()} - {self.hour}"

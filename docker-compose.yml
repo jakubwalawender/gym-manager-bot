@@ -26,8 +26,10 @@ services:
     restart: always
     labels:
       ofelia.enabled: "true"
-      ofelia.job-exec.datecron.schedule: "0 58 23 * * *"
-      ofelia.job-exec.datecron.command: "python manage.py make_reservations"
+      ofelia.job-exec.make-reservations-30.schedule: "0 28 * * * *"
+      ofelia.job-exec.make-reservations-30.command: "python manage.py make_reservations"
+      ofelia.job-exec.make-reservations-00.schedule: "0 58 * * * *"
+      ofelia.job-exec.make-reservations-00.command: "python manage.py make_reservations"
     depends_on:
       - db
 

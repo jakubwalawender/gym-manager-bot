@@ -6,7 +6,7 @@ from reservations.models import PossibleReservation
 
 
 class User(AbstractUser):
-    gym_manager_login = EncryptedCharField(max_length=100, blank=True, null=True)
-    gym_manager_password = EncryptedCharField(max_length=100, blank=True, null=True)
+    gym_manager_login = EncryptedCharField(max_length=200, blank=True, null=True)
+    gym_manager_password = EncryptedCharField(max_length=200, blank=True, null=True)
     gym_manager_id = models.IntegerField(unique=True, blank=True, null=True)
     reservations = models.ManyToManyField(PossibleReservation, blank=True)

@@ -126,6 +126,32 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+log_dir = os.path.join(BASE_DIR, 'logs')
+log_file = os.path.join(log_dir, 'gym_manager.log')
+Path(log_dir).mkdir(parents=True, exist_ok=True)
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': log_file,
+            'formatter': 'simple'
+        },
+    },
+    'formatters': {
+        'simple': {
+            'format': '{levelname} {asctime} {message}',
+            'style': '{',
+        },
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'INFO',
+    },
+}
+
 FIELD_ENCRYPTION_KEY = os.environ.get('FIELD_ENCRYPTION_KEY')
 
 LOGIN_URL = "https://stats.fitnessplatinium.pl:13002/club-api/user-token"

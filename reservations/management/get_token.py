@@ -1,6 +1,8 @@
 import requests
 
 from config.settings import LOGIN_URL
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_token(user, password):
@@ -17,7 +19,12 @@ def get_token(user, password):
     }
     try:
         r = requests.post(LOGIN_URL, data=data, headers=headers)
-        token = r.json()['access_token']
+        res = r.json()
+        if 'access_token' not in res:
+            logger.debug(f"Getting access token for user {user.name} failed")
+            return None
+        token = res['access_token']
         return token
-    except:
+    except Exception as e:
+        logger.debug(f"Getting access token for user {user.name} failed!. Exception: {e}")
         return None

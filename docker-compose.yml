@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   db:
+    container_name: postgres
     image: postgres
     volumes:
       - ./data/db:/var/lib/postgresql/data
@@ -10,20 +11,36 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     restart: always
+    ports:
+      - 5432:5432
+
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.net
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - 5050:80
+
 
   web:
+    container_name: django
     build: .
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    # ommand: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/gym_manager_bot
     ports:
-      - "8000:8000"
+      - 8000:8000
+      - 8028:8028
     environment:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - FIELD_ENCRYPTION_KEY=1utBHXiKp-eZxmSR3lutCHYHDH3QB321yBnj0X6c0K0=
     restart: always
+    tty: true
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.make-reservations-30.schedule: "0 28 * * * *"
@@ -34,6 +51,7 @@ services:
       - db
 
   ofelia:
+    container_name: ofelia
     image: mcuadros/ofelia:latest
     restart: always
     environment:

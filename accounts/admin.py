@@ -6,5 +6,5 @@ from accounts.models import User
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username',)
     search_fields = ('username',)
-    filter_horizontal = ('reservations',)
+    filter_horizontal = ('activities',)
     # exclude = ('gym_manager_login', 'gym_manager_password', 'gym_manager_id')

@@ -7,4 +7,4 @@ from activities import views
 
 urlpatterns = [
     path('', views.index, name='test')
-]
+]   

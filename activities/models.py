@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -7,6 +6,9 @@ from django.conf import settings
 
 class ActivityType(models.Model):
     name = models.CharField(max_length=200, unique=True)
+
+    class Meta:
+        verbose_name_plural = _("activity types")
 
     def __str__(self):
         return self.name
@@ -41,6 +43,7 @@ class Activity(models.Model):
 
     class Meta:
         unique_together = ("hour", "weekday", "activity_type", "activity_id")
+        verbose_name_plural = _("activities")
 
     def __str__(self):
         return f"{self.location.name} - {self.activity_type.name} - {self.get_weekday_display()} - {self.hour}"

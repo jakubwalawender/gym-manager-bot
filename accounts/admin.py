@@ -1,10 +1,14 @@
 from django.contrib import admin
-from accounts.models import User
+from accounts.models import User, UserActivity
+from activities.models import Activity
 
 
+
+class UserActivitiesInline(admin.TabularInline):
+    model = UserActivity
+    extra = 1
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username',)
     search_fields = ('username',)
-    filter_horizontal = ('activities',)
-    # exclude = ('gym_manager_login', 'gym_manager_password', 'gym_manager_id')
+    inlines = (UserActivitiesInline,)
